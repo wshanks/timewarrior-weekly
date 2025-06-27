@@ -40,8 +40,11 @@ def read_json():
     return data
 
 
+def parse_dt(x):
+    return datetime.datetime.strptime(x, "%Y%m%dT%H%M%SZ")
+
+
 def make_dates(interval):
-    parse_dt = lambda x: datetime.datetime.strptime(x, "%Y%m%dT%H%M%SZ")
     parsed = start = parse_dt(interval["start"]) + TZ_OFFSET
     if "end" in interval:
         end = parse_dt(interval["end"]) + TZ_OFFSET
