@@ -41,15 +41,15 @@ def read_json():
 
 
 def parse_dt(x):
-    return datetime.datetime.strptime(x, "%Y%m%dT%H%M%SZ")
+    return datetime.datetime.strptime(x, "%Y%m%dT%H%M%SZ").replace(tzinfo=datetime.UTC)
 
 
 def make_dates(interval):
-    parsed = start = parse_dt(interval["start"]) + TZ_OFFSET
+    start = parse_dt(interval["start"]) + TZ_OFFSET
     if "end" in interval:
         end = parse_dt(interval["end"]) + TZ_OFFSET
     else:
-        end = datetime.datetime.utcnow() + TZ_OFFSET
+        end = datetime.datetime.now(datetime.UTC) + TZ_OFFSET
     return Interval(start=start, end=end)
 
 
@@ -82,7 +82,7 @@ def main():
     start = data[0].start
     days_to_end_week = ((FIRST_WEEK_DAY - start.weekday()) % 7) or 7
     end_week = (
-        datetime.datetime(start.year, start.month, start.day) +
+        datetime.datetime(start.year, start.month, start.day, tzinfo=datetime.UTC) +
         datetime.timedelta(days=days_to_end_week)
     )
     weeks = [WeekCounter(end=end_week)]
